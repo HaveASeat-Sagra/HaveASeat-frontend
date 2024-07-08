@@ -1,14 +1,23 @@
+*{
+  margin: 0;
+  padding: 0;
+}
 .header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background-color: #333;
+    background-color: #C28A38;
     padding: 10px 20px;
     color: white;
+    margin: 0;
   }
   
-  .left-icon, .right-icon {
+  .left-icon, .right-icon, .logo{
     font-size: 24px;
+  }
+  .logo{
+    height: 100px;
+    width: auto;
   }
   
   .left-icon {
