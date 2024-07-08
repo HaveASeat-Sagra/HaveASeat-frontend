@@ -21,8 +21,12 @@
     "lib": [
       "ES2022",
       "dom"
-    ]
+    ],
+    "allowJs": true, // Dodane wsparcie dla plików JS
+    "checkJs": true  // Opcjonalne: Włącz sprawdzanie typów dla plików JS
   },
+  "include": ["src/**/*"],
+  "exclude": ["node_modules"],
   "angularCompilerOptions": {
     "enableI18nLegacyMessageIdFormat": false,
     "strictInjectionParameters": true,

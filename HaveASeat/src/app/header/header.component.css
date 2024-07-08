@@ -1,0 +1,20 @@
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #333;
+    padding: 10px 20px;
+    color: white;
+  }
+  
+  .left-icon, .right-icon {
+    font-size: 24px;
+  }
+  
+  .left-icon {
+    order: 1;
+  }
+  
+  .right-icon {
+    order: 2;
+  }
