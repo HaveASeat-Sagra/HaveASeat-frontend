@@ -2,3 +2,7 @@
     margin: 0;
     padding: 0;
 }
+body {
+    margin: 0;
+    background: linear-gradient(180deg, #E6C08A 0%, #E6C08A 13.01%, #FFFFFF 26.5%); /* Wybierz kolor tła */
+  }

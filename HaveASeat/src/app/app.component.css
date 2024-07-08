@@ -1,4 +1,10 @@
 *{
     margin: 0;
     padding: 0;
+    
 }
+:host {
+    display: block;
+    min-height: 100vh; /* Zapewnia, że komponent zajmuje przynajmniej całą wysokość okna */
+    background: linear-gradient(180deg, #E6C08A 0%, #E6C08A 13.01%, #FFFFFF 26.5%);
+  }
