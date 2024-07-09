@@ -1,0 +1,5 @@
+<div class="room">
+    <div class="row" *ngFor="let row of map">
+      <div class="place" *ngFor="let place of row" [ngClass]="place.status"></div>
+    </div>
+  </div>
