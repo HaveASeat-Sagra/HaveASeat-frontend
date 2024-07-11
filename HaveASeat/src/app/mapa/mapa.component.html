@@ -1,5 +1,7 @@
-<div class="room">
-    <div class="row" *ngFor="let row of map">
-      <div class="place" *ngFor="let place of row" [ngClass]="place.status"></div>
-    </div>
-  </div>
+<div class="room" [style.gridTemplateColumns]="'repeat(' + roomWidth + ', 50px)'">
+  <ng-container *ngFor="let row of [].constructor(roomHeight); let rowIndex = index">
+    <ng-container *ngFor="let col of [].constructor(roomWidth); let colIndex = index">
+      <div class="place"></div>
+    </ng-container>
+  </ng-container>
+</div>
