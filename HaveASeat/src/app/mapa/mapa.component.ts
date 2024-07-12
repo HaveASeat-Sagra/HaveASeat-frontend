@@ -26,8 +26,8 @@ export interface Room {
   providers: [MapaService],
 })
 export class MapaComponent implements OnInit {
-  roomWidth = 15;
-  roomHeight = 11;
+  roomWidth = 20;
+  roomHeight = 13;
   rooms: Room[] = [];
 
   constructor(private mapaService: MapaService) {}
