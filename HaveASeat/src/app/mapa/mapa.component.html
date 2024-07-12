@@ -1,7 +1,15 @@
 <div class="room" [style.gridTemplateColumns]="'repeat(' + roomWidth + ', 50px)'">
-  <ng-container *ngFor="let row of [].constructor(roomHeight); let rowIndex = index">
-    <ng-container *ngFor="let col of [].constructor(roomWidth); let colIndex = index">
-      <div class="place"></div>
+  <ng-container *ngFor="let room of rooms; let rowIndex = index">
+    <ng-container *ngFor="let cell of room.cells; let colIndex = index">
+      <div 
+        [ngStyle]="{
+          gridRowStart: cell.positionY,
+          gridColumnStart: cell.positionX,
+          borderStyle: getBorder(room.id, cell.positionY, cell.positionX)
+        }"
+        class="place">
+      
+      </div>
     </ng-container>
   </ng-container>
 </div>
