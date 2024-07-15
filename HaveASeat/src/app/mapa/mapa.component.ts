@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule, NgFor, NgStyle } from '@angular/common';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
-import { MapaService } from '../mapa.service';
+import { Desk, MapaService } from '../mapa.service';
 import { NgIf } from '@angular/common';
 
 interface Cell {
@@ -15,13 +15,14 @@ export interface Room {
   id: number;
   name: string;
   cells: Cell[];
+  desks: Desk[];
 }
 
 @Component({
   selector: 'app-mapa',
   templateUrl: './mapa.component.html',
   styleUrls: ['./mapa.component.css'],
-  imports: [NgStyle, NgFor, HttpClientModule, NgIf],
+  imports: [NgStyle, NgFor, HttpClientModule, NgIf, CommonModule],
   standalone: true,
   providers: [MapaService],
 })
@@ -29,6 +30,7 @@ export class MapaComponent implements OnInit {
   roomWidth = 20;
   roomHeight = 13;
   rooms: Room[] = [];
+  desks: Desk[] = [];
 
   constructor(private mapaService: MapaService) {}
 
@@ -58,4 +60,10 @@ export class MapaComponent implements OnInit {
   getRange(n: number): number[] {
     return Array.from({ length: n }, (_, index) => index);
   }
+  isDesk(positionX: number, positionY: number): boolean {
+    var result = this.desks.some(desk => desk.positionX === positionX && desk.positionY === positionY);
+    console.log(result);
+    return result;
+  }
+  
 }

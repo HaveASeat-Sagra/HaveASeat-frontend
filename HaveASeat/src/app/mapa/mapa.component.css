@@ -19,3 +19,6 @@
 .place:hover{
   background: rgb(185, 175, 175);
 }
+.desk-cell {
+  background-color: green;
+}
