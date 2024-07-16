@@ -41,6 +41,21 @@ export class MapaComponent implements OnInit {
     console.log("cell:", cell.positionX, cell.positionY);
     return desk.positionX === cell.positionX && desk.positionY === cell.positionY;
   }
+  getRotationClass(rotation: number): string {
+    switch (rotation) {
+      case 1:
+        console.log("prawo")
+        return 'rotate-right';
+      case 2:
+        console.log("dol")
+      return 'rotate-bottom';
+      case 3:
+        console.log("lewo")
+        return 'rotate-left';
+      default:
+        return '';
+    }
+  }
 
   markDeskCells(): void {
     if (this.rooms.length) {
@@ -48,7 +63,7 @@ export class MapaComponent implements OnInit {
       this.rooms.forEach(room => {
         room.cells.forEach(cell => {
           cell.isDesk = room.desks.some(desk => this.check(desk, cell));
-          console.log("ufo") 
+          //console.log("uno") 
           console.log(cell.positionX, cell.positionY);
           if (cell.isDesk) {
             console.log(`Desk found at position (${cell.positionX}, ${cell.positionY})`);
@@ -74,7 +89,5 @@ export class MapaComponent implements OnInit {
   getRange(n: number): number[] {
     return Array.from({ length: n }, (_, index) => index);
   }
-  getPosition(){
-    
-  }
+  
 }

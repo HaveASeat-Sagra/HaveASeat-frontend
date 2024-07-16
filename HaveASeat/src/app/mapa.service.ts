@@ -49,6 +49,7 @@ export interface Cell {
   positionY: number;
   border: string;
   isDesk?: boolean;
+  rotationClass?: string;
 }
 export interface Desk {
   id: number;

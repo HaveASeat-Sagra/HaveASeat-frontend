@@ -8,6 +8,12 @@
       borderStyle: getBorder(room.id, cell.positionY, cell.positionX)
     }"
     [ngClass]="{'desk-cell': cell.isDesk}"
+    [ngClass]="{
+      'desk-cell': cell.isDesk,
+      'rotate-right': cell.rotationClass === 'rotate-right',
+      'rotate-bottom': cell.rotationClass === 'rotate-bottom',
+      'rotate-left': cell.rotationClass === 'rotate-left'
+    }"
     class="place">
   </div>
 
