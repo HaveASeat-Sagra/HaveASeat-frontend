@@ -31,7 +31,6 @@ export class MapaService {
     return this.http.get<Room[]>(this.apiUrl);
   }
   getDesks(): Observable<Desk[]> {
-    // Replace 'your_desk_api_url' with the actual URL
     return this.http.get<Desk[]>(this.apiUrl);
   }
 }
@@ -49,10 +48,12 @@ export interface Cell {
   positionX: number;
   positionY: number;
   border: string;
+  isDesk?: boolean;
 }
 export interface Desk {
   id: number;
   positionX: number;
   positionY: number;
   chairPosition: number;
+  rotation?: number;
 }

@@ -1,22 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule, NgFor, NgStyle } from '@angular/common';
-import { HttpClient, HttpClientModule } from '@angular/common/http';
-import { Desk, MapaService } from '../mapa.service';
+import { HttpClientModule } from '@angular/common/http';
+import { Desk, MapaService, Room, Cell } from '../mapa.service';
 import { NgIf } from '@angular/common';
-
-interface Cell {
-  id: number;
-  positionX: number;
-  positionY: number;
-  border: string;
-}
-
-export interface Room {
-  id: number;
-  name: string;
-  cells: Cell[];
-  desks: Desk[];
-}
+import { forkJoin } from 'rxjs';
 
 @Component({
   selector: 'app-mapa',
@@ -30,15 +17,18 @@ export class MapaComponent implements OnInit {
   roomWidth = 20;
   roomHeight = 13;
   rooms: Room[] = [];
-  desks: Desk[] = [];
 
   constructor(private mapaService: MapaService) {}
 
   ngOnInit(): void {
-    this.mapaService.getRooms().subscribe(
-      (rooms: Room[]) => {
+    forkJoin({
+      rooms: this.mapaService.getRooms(),
+      desks: this.mapaService.getDesks()
+    }).subscribe(
+      ({ rooms, desks }) => {
         this.rooms = rooms;
-        console.log(rooms);
+        console.log('Rooms:', this.rooms);
+        this.markDeskCells();
       },
       (error: any) => {
         console.error('Error fetching data:', error);
@@ -46,11 +36,35 @@ export class MapaComponent implements OnInit {
     );
   }
 
+  check(desk :Desk, cell :Cell) :boolean {
+    console.log("desk:", desk.positionX, desk.positionY);
+    console.log("cell:", cell.positionX, cell.positionY);
+    return desk.positionX === cell.positionX && desk.positionY === cell.positionY;
+  }
+
+  markDeskCells(): void {
+    if (this.rooms.length) {
+      console.log('Marking desk cells...');
+      this.rooms.forEach(room => {
+        room.cells.forEach(cell => {
+          cell.isDesk = room.desks.some(desk => this.check(desk, cell));
+          console.log("ufo") 
+          console.log(cell.positionX, cell.positionY);
+          if (cell.isDesk) {
+            console.log(`Desk found at position (${cell.positionX}, ${cell.positionY})`);
+          } else {
+            console.log('Rooms or desks data not available yet.');
+          }
+        });
+      });
+    console.log("yeet")
+    }}
+
   getBorder(roomId: number, positionY: number, positionX: number): string {
     const room = this.rooms.find(r => r.id === roomId);
     const cell = room?.cells.find(c => c.positionX === positionX && c.positionY === positionY);
     return cell?.border ?? '';
-  } 
+  }
 
   isCellPresent(roomId: number, positionX: number, positionY: number): boolean {
     const room = this.rooms.find(r => r.id === roomId);
@@ -60,10 +74,7 @@ export class MapaComponent implements OnInit {
   getRange(n: number): number[] {
     return Array.from({ length: n }, (_, index) => index);
   }
-  isDesk(positionX: number, positionY: number): boolean {
-    var result = this.desks.some(desk => desk.positionX === positionX && desk.positionY === positionY);
-    console.log(result);
-    return result;
+  getPosition(){
+    
   }
-  
 }

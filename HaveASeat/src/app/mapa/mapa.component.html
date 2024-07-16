@@ -7,7 +7,7 @@
       gridColumnStart: cell.positionX,
       borderStyle: getBorder(room.id, cell.positionY, cell.positionX)
     }"
-    [ngClass]="{'desk-cell': isDesk(cell.positionX, cell.positionY)}"
+    [ngClass]="{'desk-cell': cell.isDesk}"
     class="place">
   </div>
 
