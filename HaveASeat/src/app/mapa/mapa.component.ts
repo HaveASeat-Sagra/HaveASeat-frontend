@@ -23,12 +23,14 @@ export class MapaComponent implements OnInit {
   ngOnInit(): void {
     forkJoin({
       rooms: this.mapaService.getRooms(),
-      desks: this.mapaService.getDesks()
+      //desks: this.mapaService.getDesks()
     }).subscribe(
-      ({ rooms, desks }) => {
+      ({ rooms }) => {
         this.rooms = rooms;
         console.log('Rooms:', this.rooms);
         this.markDeskCells();
+        
+        
       },
       (error: any) => {
         console.error('Error fetching data:', error);
@@ -41,8 +43,9 @@ export class MapaComponent implements OnInit {
     console.log("cell:", cell.positionX, cell.positionY);
     return desk.positionX === cell.positionX && desk.positionY === cell.positionY;
   }
-  getRotationClass(rotation: number): string {
-    switch (rotation) {
+  getRotationClass(chairPosition: number): string  {
+    
+    switch (chairPosition) {
       case 1:
         console.log("prawo")
         return 'rotate-right';
@@ -65,8 +68,13 @@ export class MapaComponent implements OnInit {
           cell.isDesk = room.desks.some(desk => this.check(desk, cell));
           //console.log("uno") 
           console.log(cell.positionX, cell.positionY);
+          
           if (cell.isDesk) {
             console.log(`Desk found at position (${cell.positionX}, ${cell.positionY})`);
+            const desk = room.desks.find(desk =>this.check(desk, cell));
+            if (desk) {
+              cell.rotationClass = this.getRotationClass(desk.chairPosition);
+            }
           } else {
             console.log('Rooms or desks data not available yet.');
           }

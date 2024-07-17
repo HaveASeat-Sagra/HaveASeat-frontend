@@ -7,7 +7,7 @@ import { Observable } from 'rxjs';
 })
 export class MapaService {
 
-  private apiUrl = ' https://run.mocky.io/v3/bea00508-4098-443a-a4d3-a8072669a86e';
+  private apiUrl = 'https://run.mocky.io/v3/7fbcc4df-6ade-4962-ab97-cde6e742a268';
   //private DeskApiUrl = 'https://run.mocky.io/v3/457acbb4-70a7-4b7c-82e0-534a259aa5a9';
 
   mapa :Room[] = []
