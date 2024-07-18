@@ -1,10 +1,11 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { CommonModule, NgFor, NgStyle } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import { Desk, MapaService, Room, Cell, Reservation, User } from '../mapa.service';
 import { NgIf } from '@angular/common';
 import { forkJoin } from 'rxjs';
 import { HeaderComponent } from '../header/header.component';
+import { DatePipe } from '@angular/common'
 
 @Component({
   selector: 'app-mapa',
@@ -23,6 +24,16 @@ export class MapaComponent implements OnInit {
   @Input() selectedDate?: string;
   
   constructor(private mapaService: MapaService) {}
+
+  checkIfReserved(reservation :Reservation, cell :Cell) :boolean {
+    return reservation.desk.positionX == cell.positionX && reservation.desk.positionY == cell.positionY;
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes['selectedDate']) {
+        this.markReserved(changes['selectedDate'].currentValue);
+    }
+  }
   ngOnInit(): void {
     forkJoin({
       rooms: this.mapaService.getRooms(),
@@ -36,14 +47,42 @@ export class MapaComponent implements OnInit {
         //console.log('reservations:', this.reservations);
         this.markDeskCells();
         
+        const today = new Date();
+        const date = today.toJSON().slice(0,10);
+        this.markReserved(date);
         
       },
       (error: any) => {
         console.error('Error fetching data:', error);
       }
     );
+  }
 
-    this.mapaService.loadReservations(this.selectedDate);
+  markReserved(date :string) {
+    console.log("marking", date);
+    forkJoin({
+      reservations: this.mapaService.loadReservations(date)
+    }).subscribe(
+      ({ reservations }) => {
+        this.reservations = reservations;
+        this.rooms.forEach(room => {
+          room.cells.forEach(cell => {
+              cell.isReserved = this.reservations.some(reservation => this.checkIfReserved(reservation, cell));
+              if(cell.isReserved) {
+                console.log("reserved");
+              }
+          })
+        })
+      },
+      (error: any) => {
+        console.error('Error fetching data:', error);
+        this.rooms.forEach(room => {
+          room.cells.forEach(cell => {
+              cell.isReserved = false;
+          })
+        })
+      }
+    );
   }
 
   check(desk :Desk, cell :Cell) :boolean {

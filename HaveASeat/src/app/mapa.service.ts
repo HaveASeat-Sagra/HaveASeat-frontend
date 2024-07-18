@@ -30,20 +30,22 @@ export class MapaService {
     
   }
   date = new Date();
-  public loadReservations(date: string | undefined): void {
-    
-    console.log(date);
-    if(date != '') {
+  public loadReservations(date: string | undefined): Observable<Reservation[]> {
+    //if (date != '') {
     const twojastara = `${this.reservationApi}${date}`
-    this.http.get<Reservation[]>(twojastara).subscribe({
-      next: (dane: Reservation[]) => {
-        this.reservations = dane;
-        console.log(this.reservations);
-      },
-      error: (error) => {
-        console.error('Błąd podczas pobierania rezerwacji:', error);
-      }});
-    }
+    console.log(twojastara);
+    return this.http.get<Reservation[]>(twojastara);
+    // this.http.get<Reservation[]>(twojastara).subscribe({
+    //   next: (dane: Reservation[]) => {
+    //     this.reservations = dane;
+    //     console.log(this.reservations);
+    //     },
+    //     error: (error) => {
+    //       console.error('Błąd podczas pobierania rezerwacji:', error);
+    //       }
+    //       });
+    //}
+
   }
 
   getRooms(): Observable<Room[]> {
@@ -69,6 +71,7 @@ export interface Cell {
   border: string;
   isDesk?: boolean;
   rotationClass?: string;
+  isReserved? :boolean;
 }
 export interface Desk {
   id: number;

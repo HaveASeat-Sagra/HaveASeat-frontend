@@ -63,9 +63,6 @@
               "buildTarget": "HaveASeat:build:development"
             }
           },
-          "options": {
-            "proxyConfig": "src/proxy.conf.json"
-          },
           "defaultConfiguration": "development"
         },
         "extract-i18n": {
@@ -94,5 +91,8 @@
         }
       }
     }
+  },
+  "cli": {
+    "analytics": "d2547d28-365f-40b1-8d43-4934de31b842"
   }
 }
