@@ -15,4 +15,11 @@ import { HttpClientModule, HttpClient } from '@angular/common/http';
 })
 export class AppComponent {
   title = 'HaveASeat';
+  selectedDate: string = '';
+
+
+  onDateChanged(date: string): void {
+    this.selectedDate = date;
+    console.log(this.selectedDate);
+  }
 }

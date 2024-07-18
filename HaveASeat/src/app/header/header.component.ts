@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
 
 @Component({
   selector: 'app-header',
@@ -7,4 +7,12 @@ import { Component } from '@angular/core';
   templateUrl: './header.component.html',
   styleUrl: './header.component.css'
 })
-export class HeaderComponent {}
+export class HeaderComponent {
+
+  @Output() dateChanged: EventEmitter<string> = new EventEmitter<string>();
+
+  onDateChange(event: any): void {
+    const selectedDate = event.target.value;
+    this.dateChanged.emit(selectedDate);
+  }
+}

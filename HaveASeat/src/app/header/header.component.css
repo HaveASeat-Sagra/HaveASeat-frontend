@@ -27,3 +27,6 @@
   .right-icon {
     order: 2;
   }
+  input[type="date"] {
+    background-color: white;
+  }

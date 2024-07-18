@@ -8,10 +8,13 @@ import { Observable } from 'rxjs';
 export class MapaService {
 
   private apiUrl = 'https://run.mocky.io/v3/7fbcc4df-6ade-4962-ab97-cde6e742a268';
+  private reservationApi = 'https://localhost:7023/api/Reservation/getByDay/';
   //private DeskApiUrl = 'https://run.mocky.io/v3/457acbb4-70a7-4b7c-82e0-534a259aa5a9';
+
 
   mapa :Room[] = []
   desks:Desk[] = []
+  reservations: Reservation[] = [];
 
   constructor(private http: HttpClient) {
     
@@ -25,6 +28,22 @@ export class MapaService {
     });
       
     
+  }
+  date = new Date();
+  public loadReservations(date: string | undefined): void {
+    
+    console.log(date);
+    if(date != '') {
+    const twojastara = `${this.reservationApi}${date}`
+    this.http.get<Reservation[]>(twojastara).subscribe({
+      next: (dane: Reservation[]) => {
+        this.reservations = dane;
+        console.log(this.reservations);
+      },
+      error: (error) => {
+        console.error('Błąd podczas pobierania rezerwacji:', error);
+      }});
+    }
   }
 
   getRooms(): Observable<Room[]> {
@@ -57,4 +76,16 @@ export interface Desk {
   positionY: number;
   chairPosition: number;
   rotation?: number;
+}
+export interface Reservation {
+  id: number;
+  date: string;
+  desk: Desk;
+  user: User;
+}
+
+export interface User {
+  id: number;
+  email: string;
+  role: number;
 }

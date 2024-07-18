@@ -1,3 +1,3 @@
-<app-header ></app-header>
-<app-mapa></app-mapa>
+<app-header (dateChanged)="onDateChanged($event)"></app-header>
+<app-mapa [selectedDate]="selectedDate"></app-mapa>
 <!-- <app-footer></app-footer> -->
