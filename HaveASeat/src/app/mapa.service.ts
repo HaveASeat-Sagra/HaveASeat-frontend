@@ -65,6 +65,7 @@ export interface Room {
 }
 
 export interface Cell {
+imagePath: any;
   id: number;
   positionX: number;
   positionY: number;
@@ -72,6 +73,7 @@ export interface Cell {
   isDesk?: boolean;
   rotationClass?: string;
   isReserved? :boolean;
+  isClicked? :boolean;
 }
 export interface Desk {
   id: number;

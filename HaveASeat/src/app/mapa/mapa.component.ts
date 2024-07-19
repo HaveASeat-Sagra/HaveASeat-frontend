@@ -20,6 +20,7 @@ export class MapaComponent implements OnInit {
   roomHeight = 13;
   rooms: Room[] = [];
   reservations:Reservation[] = [];
+  clickedOnce = false;
   
   @Input() selectedDate?: string;
   
@@ -32,6 +33,12 @@ export class MapaComponent implements OnInit {
   ngOnChanges(changes: SimpleChanges) {
     if (changes['selectedDate']) {
         this.markReserved(changes['selectedDate'].currentValue);
+    }
+  }
+  onDeskClick(cell: Cell) {
+    if (!this.clickedOnce && cell.isDesk && !cell.isReserved) {
+      cell.isClicked = true;
+      this.clickedOnce = true;
     }
   }
   ngOnInit(): void {
