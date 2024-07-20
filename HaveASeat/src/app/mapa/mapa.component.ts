@@ -36,10 +36,18 @@ export class MapaComponent implements OnInit {
     }
   }
   onDeskClick(cell: Cell) {
-    if (!this.clickedOnce && cell.isDesk && !cell.isReserved) {
-      cell.isClicked = true;
-      this.clickedOnce = true;
+    // if (!this.clickedOnce && cell.isDesk && !cell.isReserved)
+    if (cell.isDesk && !cell.isReserved)
+     {
+      this.rooms.forEach(room => {
+        room.cells.forEach(c => {
+          c.isClicked = false;
+          console.log('here', c.isClicked);
+        })
+      });
     }
+    cell.isClicked = true;
+    //this.clickedOnce = true;
   }
   ngOnInit(): void {
     forkJoin({
