@@ -9,6 +9,7 @@ export class MapaService {
 
   private apiUrl = 'https://run.mocky.io/v3/7fbcc4df-6ade-4962-ab97-cde6e742a268';
   private reservationApi = 'https://localhost:7023/api/Reservation/getByDay/';
+  private addReservationUrl = "https://localhost:7023/api/Reservation/newReservation";
   //private DeskApiUrl = 'https://run.mocky.io/v3/457acbb4-70a7-4b7c-82e0-534a259aa5a9';
 
 
@@ -26,9 +27,8 @@ export class MapaService {
         console.error('Błąd podczas pobierania danych:', error);
       }
     });
-      
-    
   }
+
   date = new Date();
   public loadReservations(date: string | undefined): Observable<Reservation[]> {
     //if (date != '') {
@@ -46,6 +46,11 @@ export class MapaService {
     //       });
     //}
 
+  }
+
+  addReservation(reservation: NewReservation): Observable<NewReservation> {
+    console.log("in service", reservation);
+    return this.http.post<NewReservation>(this.addReservationUrl, reservation);
   }
 
   getRooms(): Observable<Room[]> {
@@ -74,6 +79,7 @@ imagePath: any;
   rotationClass?: string;
   isReserved? :boolean;
   isClicked? :boolean;
+  isUsers? : boolean;
 }
 export interface Desk {
   id: number;
@@ -87,6 +93,11 @@ export interface Reservation {
   date: string;
   desk: Desk;
   user: User;
+}
+export interface NewReservation {
+  date :string;
+  userId :number;
+  deskId :number;
 }
 
 export interface User {

@@ -1,7 +1,7 @@
 import { Component, OnInit, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { CommonModule, NgFor, NgStyle } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
-import { Desk, MapaService, Room, Cell, Reservation, User } from '../mapa.service';
+import { Desk, MapaService, Room, Cell, Reservation, User, NewReservation } from '../mapa.service';
 import { NgIf } from '@angular/common';
 import { forkJoin } from 'rxjs';
 import { HeaderComponent } from '../header/header.component';
@@ -21,6 +21,7 @@ export class MapaComponent implements OnInit {
   rooms: Room[] = [];
   reservations:Reservation[] = [];
   clickedOnce = false;
+  userId = 1;
   
   @Input() selectedDate?: string;
   
@@ -28,6 +29,10 @@ export class MapaComponent implements OnInit {
 
   checkIfReserved(reservation :Reservation, cell :Cell) :boolean {
     return reservation.desk.positionX == cell.positionX && reservation.desk.positionY == cell.positionY;
+  }
+
+  checkIfBelongsToUser(reservation :Reservation, cell :Cell) :boolean {
+    return (reservation.desk.positionX == cell.positionX && reservation.desk.positionY == cell.positionY) && reservation.user.id == this.userId;
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -42,12 +47,32 @@ export class MapaComponent implements OnInit {
       this.rooms.forEach(room => {
         room.cells.forEach(c => {
           c.isClicked = false;
-          console.log('here', c.isClicked);
         })
       });
     }
     cell.isClicked = true;
     //this.clickedOnce = true;
+    if(confirm("Book this seat?")) {
+      const desk = this.getCellsDesk(cell);
+      if(this.selectedDate)
+      {
+        const newReservation :NewReservation = {
+          date: this.selectedDate,
+          userId: this.userId,
+          deskId: desk.id
+        };
+      this.mapaService.addReservation(newReservation).subscribe(
+        response => {
+          console.log("Reservation successful:", response);
+        },
+        error => {
+          console.error("Reservation failed:", error);
+        }
+      );
+    }
+    } else {
+      
+    }
   }
   ngOnInit(): void {
     forkJoin({
@@ -73,6 +98,18 @@ export class MapaComponent implements OnInit {
     );
   }
 
+  getCellsDesk(cell: Cell): Desk {
+    for (const room of this.rooms) {
+      for (const desk of room.desks) {
+        if (desk.positionX === cell.positionX && desk.positionY === cell.positionY) {
+          return desk;
+        }
+      }
+    }
+    throw new Error('Desk not found for the given cell');
+  }
+  
+
   markReserved(date :string) {
     console.log("marking", date);
     forkJoin({
@@ -82,9 +119,12 @@ export class MapaComponent implements OnInit {
         this.reservations = reservations;
         this.rooms.forEach(room => {
           room.cells.forEach(cell => {
-              cell.isReserved = this.reservations.some(reservation => this.checkIfReserved(reservation, cell));
-              if(cell.isReserved) {
-                console.log("reserved");
+            if(this.reservations.some(reservation => this.checkIfBelongsToUser(reservation, cell)))
+              {
+                cell.isUsers = true;
+              }
+              else {
+                cell.isReserved = this.reservations.some(reservation => this.checkIfReserved(reservation, cell));
               }
           })
         })
