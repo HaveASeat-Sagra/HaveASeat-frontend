@@ -15,7 +15,7 @@
         }"
         (click)="cell.isDesk && onDeskClick(cell)"
         class="place">
-        <img *ngIf="cell.isDesk"  [src]="cell.isClicked || cell.isUsers ? '/assets/images/niebieskiegora.png' : '/assets/images/zielonegora.png'" alt="Desk Image" class="desk-img">
+        <img *ngIf="cell.isDesk && !cell.isReserved"  [src]="(cell.isClicked || cell.isUsers) ? '/assets/images/niebieskiegora.png' : '/assets/images/zielonegora.png'" alt="Desk Image" class="desk-img">
         <img *ngIf="cell.isReserved" src="/assets/images/czerwonegora.png" alt="" class="desk-img">
       </div>
     </ng-container>

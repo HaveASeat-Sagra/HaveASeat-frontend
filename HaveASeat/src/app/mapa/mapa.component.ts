@@ -152,6 +152,7 @@ export class MapaComponent implements OnInit {
           room.cells.forEach(cell => {
             if (this.reservations.some(reservation => this.checkIfBelongsToUser(reservation, cell))) {
               cell.isUsers = true;
+              cell.isReserved = false;
             }
             else {
               cell.isReserved = this.reservations.some(reservation => this.checkIfReserved(reservation, cell));
