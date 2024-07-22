@@ -19,31 +19,31 @@ export class MapaComponent implements OnInit {
   roomWidth = 20;
   roomHeight = 13;
   rooms: Room[] = [];
-  reservations:Reservation[] = [];
+  reservations: Reservation[] = [];
   clickedOnce = false;
   userId = 1;
-  
-  @Input() selectedDate?: string;
-  
-  constructor(private mapaService: MapaService) {}
 
-  checkIfReserved(reservation :Reservation, cell :Cell) :boolean {
+  @Input() selectedDate?: string;
+
+  constructor(private mapaService: MapaService) { }
+
+  checkIfReserved(reservation: Reservation, cell: Cell): boolean {
     return reservation.desk.positionX == cell.positionX && reservation.desk.positionY == cell.positionY;
   }
 
-  checkIfBelongsToUser(reservation :Reservation, cell :Cell) :boolean {
+  checkIfBelongsToUser(reservation: Reservation, cell: Cell): boolean {
     return (reservation.desk.positionX == cell.positionX && reservation.desk.positionY == cell.positionY) && reservation.user.id == this.userId;
   }
 
+
   ngOnChanges(changes: SimpleChanges) {
     if (changes['selectedDate']) {
-        this.markReserved(changes['selectedDate'].currentValue);
+      this.markReserved(changes['selectedDate'].currentValue);
     }
   }
   onDeskClick(cell: Cell) {
     // if (!this.clickedOnce && cell.isDesk && !cell.isReserved)
-    if (cell.isDesk && !cell.isReserved)
-     {
+    if (cell.isDesk && !cell.isReserved) {
       this.rooms.forEach(room => {
         room.cells.forEach(c => {
           c.isClicked = false;
@@ -52,26 +52,47 @@ export class MapaComponent implements OnInit {
     }
     cell.isClicked = true;
     //this.clickedOnce = true;
-    if(confirm("Book this seat?")) {
+    if (confirm("Book this seat?")) {
       const desk = this.getCellsDesk(cell);
-      if(this.selectedDate)
-      {
-        const newReservation :NewReservation = {
-          date: this.selectedDate,
-          userId: this.userId,
-          deskId: desk.id
-        };
-      this.mapaService.addReservation(newReservation).subscribe(
-        response => {
+
+      const newReservation: NewReservation = {
+        date: new Date().toJSON().slice(0, 10),
+        userId: this.userId,
+        deskId: desk.id
+      }
+
+      if (this.selectedDate) {
+        newReservation.date = this.selectedDate;
+      }
+
+      this.mapaService.addReservation(newReservation).subscribe({
+        next: response => {
           console.log("Reservation successful:", response);
         },
-        error => {
+        complete: () => {
+          var usersReservations = this.reservations.filter(r => r.user.id == this.userId);
+          if (usersReservations != null) {
+            console.log(usersReservations);
+            usersReservations.forEach(reservation => {
+              this.mapaService.deleteReservationsById(reservation.id).subscribe({
+                next: deleteResponse => {
+                  console.log("deleted", deleteResponse);
+                  //this.getDesksCell(reservation.desk).isUsers = false;
+                  this.markReserved(newReservation.date);
+                },
+                error: deleteError => {
+                  console.error("delete failed:", deleteError);
+                }
+              });
+            });
+          }
+        },
+        error: error => {
           console.error("Reservation failed:", error);
         }
-      );
-    }
+      });
     } else {
-      
+      cell.isClicked = false;
     }
   }
   ngOnInit(): void {
@@ -86,11 +107,11 @@ export class MapaComponent implements OnInit {
         console.log('Rooms:', this.rooms);
         //console.log('reservations:', this.reservations);
         this.markDeskCells();
-        
+
         const today = new Date();
-        const date = today.toJSON().slice(0,10);
+        const date = today.toJSON().slice(0, 10);
         this.markReserved(date);
-        
+
       },
       (error: any) => {
         console.error('Error fetching data:', error);
@@ -108,9 +129,19 @@ export class MapaComponent implements OnInit {
     }
     throw new Error('Desk not found for the given cell');
   }
-  
 
-  markReserved(date :string) {
+  getDesksCell(desk :Desk) :Cell {
+    for (const room of this.rooms) {
+      for (const cell of room.cells) {
+        if (desk.positionX === cell.positionX && desk.positionY === cell.positionY) {
+          return cell;
+        }
+      }
+    }
+    throw new Error('Cell not found for the given desk');
+  }
+
+  markReserved(date: string) {
     console.log("marking", date);
     forkJoin({
       reservations: this.mapaService.loadReservations(date)
@@ -119,13 +150,13 @@ export class MapaComponent implements OnInit {
         this.reservations = reservations;
         this.rooms.forEach(room => {
           room.cells.forEach(cell => {
-            if(this.reservations.some(reservation => this.checkIfBelongsToUser(reservation, cell)))
-              {
-                cell.isUsers = true;
-              }
-              else {
-                cell.isReserved = this.reservations.some(reservation => this.checkIfReserved(reservation, cell));
-              }
+            if (this.reservations.some(reservation => this.checkIfBelongsToUser(reservation, cell))) {
+              cell.isUsers = true;
+            }
+            else {
+              cell.isReserved = this.reservations.some(reservation => this.checkIfReserved(reservation, cell));
+              cell.isUsers = false;
+            }
           })
         })
       },
@@ -133,27 +164,28 @@ export class MapaComponent implements OnInit {
         console.error('Error fetching data:', error);
         this.rooms.forEach(room => {
           room.cells.forEach(cell => {
-              cell.isReserved = false;
+            cell.isReserved = false;
+            cell.isUsers = false;
           })
         })
       }
     );
   }
 
-  check(desk :Desk, cell :Cell) :boolean {
+  check(desk: Desk, cell: Cell): boolean {
     //console.log("desk:", desk.positionX, desk.positionY);
     //console.log("cell:", cell.positionX, cell.positionY);
     return desk.positionX === cell.positionX && desk.positionY === cell.positionY;
   }
-  getRotationClass(chairPosition: number): string  {
-    
+  getRotationClass(chairPosition: number): string {
+
     switch (chairPosition) {
       case 1:
         //console.log("prawo")
         return 'rotate-right';
       case 2:
         //console.log("dol")
-      return 'rotate-bottom';
+        return 'rotate-bottom';
       case 3:
         //console.log("lewo")
         return 'rotate-left';
@@ -170,10 +202,10 @@ export class MapaComponent implements OnInit {
           cell.isDesk = room.desks.some(desk => this.check(desk, cell));
           //console.log("uno") 
           //console.log(cell.positionX, cell.positionY);
-          
+
           if (cell.isDesk) {
             //console.log(`Desk found at position (${cell.positionX}, ${cell.positionY})`);
-            const desk = room.desks.find(desk =>this.check(desk, cell));
+            const desk = room.desks.find(desk => this.check(desk, cell));
             if (desk) {
               cell.rotationClass = this.getRotationClass(desk.chairPosition);
             }
@@ -182,8 +214,9 @@ export class MapaComponent implements OnInit {
           }
         });
       });
-    //console.log("yeet")
-    }}
+      //console.log("yeet")
+    }
+  }
 
   getBorder(roomId: number, positionY: number, positionX: number): string {
     const room = this.rooms.find(r => r.id === roomId);
@@ -199,5 +232,5 @@ export class MapaComponent implements OnInit {
   getRange(n: number): number[] {
     return Array.from({ length: n }, (_, index) => index);
   }
-  
+
 }

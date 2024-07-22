@@ -11,14 +11,15 @@ export class MapaService {
   private reservationApi = 'https://localhost:7023/api/Reservation/getByDay/';
   private addReservationUrl = "https://localhost:7023/api/Reservation/newReservation";
   //private DeskApiUrl = 'https://run.mocky.io/v3/457acbb4-70a7-4b7c-82e0-534a259aa5a9';
+  private deleteReservationUrl = "https://localhost:7023/api/Reservation/delete/";
 
 
-  mapa :Room[] = []
-  desks:Desk[] = []
+  mapa: Room[] = []
+  desks: Desk[] = []
   reservations: Reservation[] = [];
 
   constructor(private http: HttpClient) {
-    
+
     this.http.get<Room[]>(this.apiUrl).subscribe({
       next: (dane: Room[]) => {
         this.mapa = dane;
@@ -59,6 +60,9 @@ export class MapaService {
   getDesks(): Observable<Desk[]> {
     return this.http.get<Desk[]>(this.apiUrl);
   }
+  deleteReservationsById(userId: number): Observable<void> {
+    return this.http.delete<void>(`${this.deleteReservationUrl}${userId}`);
+  }
 }
 
 
@@ -70,16 +74,16 @@ export interface Room {
 }
 
 export interface Cell {
-imagePath: any;
+  imagePath: any;
   id: number;
   positionX: number;
   positionY: number;
   border: string;
   isDesk?: boolean;
   rotationClass?: string;
-  isReserved? :boolean;
-  isClicked? :boolean;
-  isUsers? : boolean;
+  isReserved?: boolean;
+  isClicked?: boolean;
+  isUsers?: boolean;
 }
 export interface Desk {
   id: number;
@@ -95,9 +99,9 @@ export interface Reservation {
   user: User;
 }
 export interface NewReservation {
-  date :string;
-  userId :number;
-  deskId :number;
+  date: string;
+  userId: number;
+  deskId: number;
 }
 
 export interface User {
