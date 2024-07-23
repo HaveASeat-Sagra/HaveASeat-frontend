@@ -9,7 +9,7 @@
   display: grid;
   gap: 0px;
   padding: 20px;
-  background-color: #d2aa73;
+  background-color: #E6EAED;
   justify-content: center;
   flex-wrap: wrap;
   grid-template-columns: 1fr;
@@ -23,7 +23,7 @@
   box-sizing: border-box;
   justify-content: center;
   align-items: center;
-  background-color: #f0f0f0;
+  background-color: #E6EAED;
 }
 
 .place:hover {

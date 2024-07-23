@@ -4,12 +4,51 @@
 }
 .header {
     display: flex;
-    justify-content: space-between;
+
     align-items: center;
-    background-color: #C28A38;
+    background-color: #F9F9F9;
     padding: 10px 20px;
-    color: white;
     margin: 0;
+    
+  }
+  .sentino{
+    display: flex;
+  }
+  .gojo{
+    margin-left: 5px;
+    margin-right: 5px;
+  }
+  .malikmontana{
+    display: flex;
+    margin-left: 5px;
+    margin-right: 5px;
+    
+  } 
+  .geto{
+    margin-left: 5px;
+    margin-right: 5px;  }
+  .esperanza{
+    /* badge-numer */
+
+/* Auto layout */
+display: flex;
+flex-direction: column;
+justify-content: center;
+align-items: center;
+padding: 4px 8px;
+gap: 10px;
+
+width: 22px;
+height: 22px;
+
+background: #E7E7E7;
+border-radius: 25px;
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+flex-grow: 0;
+
   }
   
   .left-icon, .right-icon, .logo{
@@ -20,13 +59,7 @@
     width: auto;
   }
   
-  .left-icon {
-    order: 1;
-  }
-  
-  .right-icon {
-    order: 2;
-  }
+
   input[type="date"] {
     background-color: white;
   }

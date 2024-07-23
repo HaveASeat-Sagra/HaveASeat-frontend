@@ -52,7 +52,7 @@ export class MapaComponent implements OnInit {
     }
     cell.isClicked = true;
     //this.clickedOnce = true;
-    if (confirm("Book this seat?")) {
+    if (cell.isUsers == false && confirm("Book this seat?")) {
       const desk = this.getCellsDesk(cell);
 
       const newReservation: NewReservation = {
@@ -70,9 +70,10 @@ export class MapaComponent implements OnInit {
           console.log("Reservation successful:", response);
         },
         complete: () => {
+          this.markReserved(newReservation.date);
           var usersReservations = this.reservations.filter(r => r.user.id == this.userId);
-          if (usersReservations != null) {
-            console.log(usersReservations);
+          console.log(usersReservations);
+          if (usersReservations.length) {
             usersReservations.forEach(reservation => {
               this.mapaService.deleteReservationsById(reservation.id).subscribe({
                 next: deleteResponse => {
@@ -92,7 +93,28 @@ export class MapaComponent implements OnInit {
         }
       });
     } else {
-      cell.isClicked = false;
+      //cell.isClicked = false;
+      if(cell.isUsers && confirm("Cancel reservation?")) {
+        //cell.isClicked = false;
+            const reservation = this.reservations.find(r => r.user.id == this.userId);
+            if(reservation)
+            {
+              this.mapaService.deleteReservationsById(reservation.id).subscribe({
+                next: deleteResponse => {
+                  console.log("cancelled", deleteResponse);
+                  console.log("date", reservation.date);
+                },
+                complete: () => {
+                  this.markReserved(reservation.date);
+                  console.log("complete");
+                },
+                error: deleteError => {
+                  console.error("delete failed:", deleteError);
+                }
+            });
+            }
+  
+          }
     }
   }
   ngOnInit(): void {
@@ -148,6 +170,7 @@ export class MapaComponent implements OnInit {
     }).subscribe(
       ({ reservations }) => {
         this.reservations = reservations;
+        if(this.reservations.length) {
         this.rooms.forEach(room => {
           room.cells.forEach(cell => {
             if (this.reservations.some(reservation => this.checkIfBelongsToUser(reservation, cell))) {
@@ -160,15 +183,18 @@ export class MapaComponent implements OnInit {
             }
           })
         })
-      },
-      (error: any) => {
-        console.error('Error fetching data:', error);
+      } else {
         this.rooms.forEach(room => {
           room.cells.forEach(cell => {
             cell.isReserved = false;
             cell.isUsers = false;
+            cell.isClicked = false;
           })
         })
+      }
+      },
+      (error: any) => {
+        console.error('Error fetching data:', error);
       }
     );
   }

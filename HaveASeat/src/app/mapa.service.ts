@@ -7,7 +7,8 @@ import { Observable } from 'rxjs';
 })
 export class MapaService {
 
-  private apiUrl = 'https://run.mocky.io/v3/7fbcc4df-6ade-4962-ab97-cde6e742a268';
+  //private apiUrl = 'https://run.mocky.io/v3/7fbcc4df-6ade-4962-ab97-cde6e742a268';
+  private apiUrl = 'https://localhost:7023/api/Map/GetAllMap';
   private reservationApi = 'https://localhost:7023/api/Reservation/getByDay/';
   private addReservationUrl = "https://localhost:7023/api/Reservation/newReservation";
   //private DeskApiUrl = 'https://run.mocky.io/v3/457acbb4-70a7-4b7c-82e0-534a259aa5a9';
