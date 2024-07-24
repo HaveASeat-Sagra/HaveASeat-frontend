@@ -4,5 +4,13 @@
 }
 body {
     margin: 0;
-    background: linear-gradient(180deg, #E6C08A 0%, #E6C08A 13.01%, #FFFFFF 26.5%); /* Wybierz kolor tła */
+     }
+.open-sans-font {
+    font-family: "Open Sans", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 500;
+    font-style: normal;
+    font-variation-settings:
+      "wdth" 100;
   }
+  
