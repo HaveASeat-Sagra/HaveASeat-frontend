@@ -5,7 +5,7 @@
         [ngStyle]="{
           gridRowStart: cell.positionY,
           gridColumnStart: cell.positionX,
-          borderStyle: getBorder(room.id, cell.positionY, cell.positionX)
+          boxShadow: getBorder(room.id, cell.positionY, cell.positionX)
         }"
         [ngClass]="{
           'desk-cell': cell.isDesk,
