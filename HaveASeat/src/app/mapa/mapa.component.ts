@@ -176,10 +176,12 @@ export class MapaComponent implements OnInit {
             if (this.reservations.some(reservation => this.checkIfBelongsToUser(reservation, cell))) {
               cell.isUsers = true;
               cell.isReserved = false;
+              cell.isClicked = false;
             }
             else {
               cell.isReserved = this.reservations.some(reservation => this.checkIfReserved(reservation, cell));
               cell.isUsers = false;
+              cell.isClicked = false;
             }
           })
         })
