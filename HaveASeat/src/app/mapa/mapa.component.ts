@@ -6,6 +6,7 @@ import { NgIf } from '@angular/common';
 import { forkJoin } from 'rxjs';
 import { HeaderComponent } from '../header/header.component';
 import { DatePipe } from '@angular/common'
+import { UserService } from '../user.service';
 
 @Component({
   selector: 'app-mapa',
@@ -13,7 +14,7 @@ import { DatePipe } from '@angular/common'
   styleUrls: ['./mapa.component.css'],
   imports: [NgStyle, NgFor, HttpClientModule, NgIf, CommonModule, HeaderComponent],
   standalone: true,
-  providers: [MapaService],
+  providers: [MapaService, UserService],
 })
 export class MapaComponent implements OnInit {
   roomWidth = 20;
@@ -21,7 +22,7 @@ export class MapaComponent implements OnInit {
   rooms: Room[] = [];
   reservations: Reservation[] = [];
   clickedOnce = false;
-  userId = 1;
+  @Input() userId! :number;
 
   @Input() selectedDate?: string;
 

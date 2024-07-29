@@ -113,3 +113,14 @@ margin-bottom: 5px;
   .gojo{
     margin-top: 5px;
   }
+
+  #user {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+  }
+  #user > img {
+    height: 40px;
+    width: 40px;
+    margin-right: 1rem;
+  }
