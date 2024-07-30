@@ -1,0 +1,126 @@
+*{
+  margin: 0;
+  padding: 0;
+}
+.header {
+    display: flex;
+
+    align-items: center;
+    background-color: #F9F9F9;
+    padding: 10px 20px;
+    margin: 0;
+    
+  }
+  .sentino{
+    display: flex;
+    margin-left: 5px;
+    margin-bottom: 5px;
+  }
+  .gojo{
+    margin-left: 5px;
+    margin-right: 5px;
+  }
+  .malikmontana{
+    display: flex;
+    margin-left: 5px;
+    margin-right: 5px;
+    
+  } 
+  .geto{
+    margin-left: 5px;
+    margin-right: 5px;  }
+  .esperanza{
+    /* badge-numer */
+
+/* Auto layout */
+display: flex;
+flex-direction: column;
+justify-content: center;
+align-items: center;
+padding: 4px 8px;
+gap: 10px;
+
+width: 15px;
+height: 22px;
+
+background: #E7E7E7;
+border-radius: 50%;
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+flex-grow: 0;
+margin-bottom: 5px;
+  }
+  
+  .left-icon, .right-icon, .logo{
+    font-size: 24px;
+  }
+  .logo{
+    height: 100px;
+    width: auto;
+  }
+  
+
+  input[type="date"] {
+    background-color: white;
+  }
+  .square {
+    width: 20px;
+    height: 20px;
+    margin-right: 5px;
+  }
+  
+  .free {
+    background-color: #BAE7B3; 
+  }
+  
+  .reserved {
+    background-color: #E7A3A3; 
+  }
+  
+  .yours {
+    background-color: #00A3FF; 
+  }
+  
+  .legend-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 5px;
+  }
+  .totoro{
+    display: flex;
+  }
+  .gugu{
+    margin-left: 20px;
+  }
+  .ninjago{
+    margin-bottom: 10px;
+  }
+  span{
+    margin-right: 5px;
+  }
+
+  input[type="date"]
+  {
+    border: solid #BBC1C9 1px;
+    border-radius: 3px;
+    padding: 5px;
+  }
+  .geto{
+    margin-top: 5px;
+  }
+  .gojo{
+    margin-top: 5px;
+  }
+
+  #user {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+  }
+  #user > img {
+    height: 40px;
+    width: 40px;
+    margin-right: 1rem;
+  }
