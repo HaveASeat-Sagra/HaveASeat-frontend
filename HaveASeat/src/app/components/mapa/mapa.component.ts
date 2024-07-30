@@ -1,12 +1,12 @@
 import { Component, OnInit, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { CommonModule, NgFor, NgStyle } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
-import { Desk, MapaService, Room, Cell, Reservation, User, NewReservation } from '../mapa.service';
+import { Desk, Room, Cell, Reservation, User, NewReservation } from '../../models/models';
 import { NgIf } from '@angular/common';
 import { forkJoin } from 'rxjs';
 import { HeaderComponent } from '../header/header.component';
-import { DatePipe } from '@angular/common'
-import { UserService } from '../user.service';
+import { UserService } from '../../services/user.service';
+import { MapaService } from '../../services/mapa.service';
 
 @Component({
   selector: 'app-mapa',
@@ -43,7 +43,6 @@ export class MapaComponent implements OnInit {
     }
   }
   onDeskClick(cell: Cell) {
-    // if (!this.clickedOnce && cell.isDesk && !cell.isReserved)
     if (cell.isDesk && !cell.isReserved) {
       this.rooms.forEach(room => {
         room.cells.forEach(c => {
@@ -52,7 +51,6 @@ export class MapaComponent implements OnInit {
       });
     }
     cell.isClicked = true;
-    //this.clickedOnce = true;
     if (cell.isUsers == false && confirm("Book this seat?")) {
       const desk = this.getCellsDesk(cell);
 
@@ -68,18 +66,14 @@ export class MapaComponent implements OnInit {
 
       this.mapaService.addReservation(newReservation).subscribe({
         next: response => {
-          console.log("Reservation successful:", response);
         },
         complete: () => {
           this.markReserved(newReservation.date);
           var usersReservations = this.reservations.filter(r => r.user.id == this.userId);
-          console.log(usersReservations);
           if (usersReservations.length) {
             usersReservations.forEach(reservation => {
               this.mapaService.deleteReservationsById(reservation.id).subscribe({
                 next: deleteResponse => {
-                  console.log("deleted", deleteResponse);
-                  //this.getDesksCell(reservation.desk).isUsers = false;
                   this.markReserved(newReservation.date);
                 },
                 error: deleteError => {
@@ -94,20 +88,13 @@ export class MapaComponent implements OnInit {
         }
       });
     } else {
-      //cell.isClicked = false;
       if(cell.isUsers && confirm("Cancel reservation?")) {
-        //cell.isClicked = false;
             const reservation = this.reservations.find(r => r.user.id == this.userId);
             if(reservation)
             {
               this.mapaService.deleteReservationsById(reservation.id).subscribe({
-                next: deleteResponse => {
-                  console.log("cancelled", deleteResponse);
-                  console.log("date", reservation.date);
-                },
                 complete: () => {
                   this.markReserved(reservation.date);
-                  console.log("complete");
                 },
                 error: deleteError => {
                   console.error("delete failed:", deleteError);
@@ -127,8 +114,6 @@ export class MapaComponent implements OnInit {
       ({ rooms }) => {
         this.rooms = rooms;
         //this.reservations = reservations;
-        console.log('Rooms:', this.rooms);
-        //console.log('reservations:', this.reservations);
         this.markDeskCells();
 
         const today = new Date();
@@ -165,7 +150,6 @@ export class MapaComponent implements OnInit {
   }
 
   markReserved(date: string) {
-    console.log("marking", date);
     forkJoin({
       reservations: this.mapaService.loadReservations(date)
     }).subscribe(
@@ -203,21 +187,16 @@ export class MapaComponent implements OnInit {
   }
 
   check(desk: Desk, cell: Cell): boolean {
-    //console.log("desk:", desk.positionX, desk.positionY);
-    //console.log("cell:", cell.positionX, cell.positionY);
     return desk.positionX === cell.positionX && desk.positionY === cell.positionY;
   }
   getRotationClass(chairPosition: number): string {
 
     switch (chairPosition) {
       case 1:
-        //console.log("prawo")
         return 'rotate-right';
       case 2:
-        //console.log("dol")
         return 'rotate-bottom';
       case 3:
-        //console.log("lewo")
         return 'rotate-left';
       default:
         return '';
@@ -226,25 +205,19 @@ export class MapaComponent implements OnInit {
 
   markDeskCells(): void {
     if (this.rooms.length) {
-      //console.log('Marking desk cells...');
       this.rooms.forEach(room => {
         room.cells.forEach(cell => {
           cell.isDesk = room.desks.some(desk => this.check(desk, cell));
-          //console.log("uno") 
-          //console.log(cell.positionX, cell.positionY);
 
           if (cell.isDesk) {
-            //console.log(`Desk found at position (${cell.positionX}, ${cell.positionY})`);
             const desk = room.desks.find(desk => this.check(desk, cell));
             if (desk) {
               cell.rotationClass = this.getRotationClass(desk.chairPosition);
             }
           } else {
-            //console.log('Rooms or desks data not available yet.');
           }
         });
       });
-      //console.log("yeet")
     }
   }
 

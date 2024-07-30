@@ -1,6 +1,6 @@
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { User } from './mapa.service';
+import { User } from '../models/models';
 import { Observable, Subject } from 'rxjs';
 
 @Injectable({
@@ -14,13 +14,5 @@ export class UserService {
   getUserById(id :number) :Observable<User> {
     return this.http.get<User>(`${this.userByIdUrl}${id}`);
   }
-  
 
-  // getUserObservable(){
-  //   return this.userIdSub.asObservable();
-  // }
-
-  // setUserId(id: number){
-  //   this.userIdSub.next(id);
-  // }
 }

@@ -1,15 +1,14 @@
 import { Component, Output } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { HeaderComponent } from './header/header.component';
-import { FooterComponent } from './footer/footer.component';
-import { MapaComponent } from './mapa/mapa.component';
+import { HeaderComponent } from './components/header/header.component';
+import { MapaComponent } from './components/mapa/mapa.component';
 import { CommonModule } from '@angular/common';
 import { HttpClientModule, HttpClient } from '@angular/common/http';
-import { UserService } from './user.service';
+import { UserService } from './services/user.service';
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, HeaderComponent, FooterComponent, MapaComponent, HttpClientModule],
+  imports: [RouterOutlet, HeaderComponent, MapaComponent, HttpClientModule],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css',
   
@@ -21,6 +20,5 @@ export class AppComponent {
 
   onDateChanged(date: string): void {
     this.selectedDate = date;
-    console.log(this.selectedDate);
   }
 }

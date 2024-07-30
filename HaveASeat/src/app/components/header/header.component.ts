@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, OnChanges, Output } from '@angular/core';
-import { UserService } from '../user.service';
-import { User } from '../mapa.service';
+import { UserService } from '../../services/user.service';
 import { HttpClientModule } from '@angular/common/http';
+import { User } from '../../models/models';
 
 @Component({
   selector: 'app-header',
@@ -31,9 +31,6 @@ export class HeaderComponent implements OnChanges{
       },
       complete: () => {
         this.username = this.user.email.split('@')[0];
-      },
-      error: userError => {
-        console.log("no such user" + userError);
       }
     });
   }
