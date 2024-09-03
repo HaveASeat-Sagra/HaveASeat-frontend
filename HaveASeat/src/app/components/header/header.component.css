@@ -1,56 +1,52 @@
 *{
   margin: 0;
   padding: 0;
+  font-family:'Lucida Sans';
 }
 .header {
     display: flex;
-
     align-items: center;
     background-color: #F9F9F9;
     padding: 10px 20px;
     margin: 0;
     
   }
-  .sentino{
+  .first_step_text{
     display: flex;
+    margin-top: 9px;
     margin-left: 5px;
     margin-bottom: 5px;
   }
-  .gojo{
+  .reservation_date{
+    margin-top: 5px;
     margin-left: 5px;
     margin-right: 5px;
   }
-  .malikmontana{
+  .second_step_text{
     display: flex;
+    margin-top: 20px;
     margin-left: 5px;
     margin-right: 5px;
     
   } 
-  .geto{
+  .pick_one_seat_text{
     margin-left: 5px;
     margin-right: 5px;  }
-  .esperanza{
-    /* badge-numer */
-
-/* Auto layout */
-display: flex;
-flex-direction: column;
-justify-content: center;
-align-items: center;
-padding: 4px 8px;
-gap: 10px;
-
-width: 15px;
-height: 22px;
-
-background: #E7E7E7;
-border-radius: 50%;
-
-/* Inside auto layout */
-flex: none;
-order: 0;
-flex-grow: 0;
-margin-bottom: 5px;
+  .number_for_instruction{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 4px 8px;
+    gap: 10px;
+    width: 15px;
+    height: 22px;
+    background: #E7E7E7;
+    border-radius: 50%;
+    flex: none;
+    order: 0;
+    flex-grow: 0;
+    margin-bottom: 5px;
   }
   
   .left-icon, .right-icon, .logo{
@@ -60,8 +56,9 @@ margin-bottom: 5px;
     height: 100px;
     width: auto;
   }
-  
-
+  .date_timer{
+    margin-left: 10px;
+  }
   input[type="date"] {
     background-color: white;
   }
@@ -88,14 +85,18 @@ margin-bottom: 5px;
     align-items: center;
     margin-bottom: 5px;
   }
-  .totoro{
+  .legends_descriptions{
     display: flex;
   }
-  .gugu{
+  .legends{
+    margin-top: 15px;
     margin-left: 20px;
   }
-  .ninjago{
+  .legends_text{
     margin-bottom: 10px;
+    font-weight: bold;
+    text-align: center;
+    font-family: sans;
   }
   span{
     margin-right: 5px;
@@ -107,13 +108,9 @@ margin-bottom: 5px;
     border-radius: 3px;
     padding: 5px;
   }
-  .geto{
+  .pick_one_seat_text{
     margin-top: 5px;
   }
-  .gojo{
-    margin-top: 5px;
-  }
-
   #user {
     margin-left: auto;
     display: flex;
