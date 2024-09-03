@@ -38,6 +38,14 @@ export class HeaderComponent implements OnChanges{
 
   onDateChange(event: any): void {
     const selectedDate = event.target.value;
+    const day = new Date(selectedDate).getDay(); 
+    if (day === 6 || day === 0) {
+      alert('W weekendy firma jest zamknieta');
+      event.target.value = this.today;
+      this.dateChanged.emit(this.today);
+  }
+  else if (day != 6 && day != 0){
     this.dateChanged.emit(selectedDate);
   }
+}
 }
