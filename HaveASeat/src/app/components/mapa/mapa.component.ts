@@ -16,7 +16,7 @@ import { MapaService } from '../../services/mapa.service';
   standalone: true,
   providers: [MapaService, UserService],
 })
-export class MapaComponent implements OnInit {
+export class MapaComponent implements OnInit, OnChanges {
   roomWidth = 20;
   roomHeight = 13;
   rooms: Room[] = [];
@@ -26,7 +26,29 @@ export class MapaComponent implements OnInit {
 
   @Input() selectedDate?: string;
 
-  constructor(private mapaService: MapaService) { }
+  constructor(private mapaService: MapaService) {}
+  ngOnInit(): void {
+    forkJoin({
+      rooms: this.mapaService.getRooms(),
+    }).subscribe(
+      ({ rooms }) => {
+        this.rooms = rooms;
+        this.markDeskCells();
+        const today = new Date();
+        const date = today.toJSON().slice(0, 10);
+        this.markReserved(date);
+      },
+      (error: any) => {
+        console.error('Error fetching data:', error);
+      }
+    );
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['selectedDate']) {
+      this.markReserved(changes['selectedDate'].currentValue);
+    }
+  }
 
   checkIfReserved(reservation: Reservation, cell: Cell): boolean {
     return reservation.desk.positionX == cell.positionX && reservation.desk.positionY == cell.positionY;
@@ -37,36 +59,30 @@ export class MapaComponent implements OnInit {
   }
 
 
-  ngOnChanges(changes: SimpleChanges) {
-    if (changes['selectedDate']) {
-      this.markReserved(changes['selectedDate'].currentValue);
-    }
-  }
   onDeskClick(cell: Cell) {
     if (cell.isDesk && !cell.isReserved) {
       this.rooms.forEach(room => {
         room.cells.forEach(c => {
           c.isClicked = false;
-        })
+        });
       });
     }
-    cell.isClicked = true;
     if (cell.isUsers == false && confirm("Book this seat?")) {
+      cell.isClicked = true;
       const desk = this.getCellsDesk(cell);
 
       const newReservation: NewReservation = {
         date: new Date().toJSON().slice(0, 10),
         userId: this.userId,
         deskId: desk.id
-      }
-
+      };
+      
       if (this.selectedDate) {
         newReservation.date = this.selectedDate;
       }
 
       this.mapaService.addReservation(newReservation).subscribe({
-        next: response => {
-        },
+        next: response => {},
         complete: () => {
           this.markReserved(newReservation.date);
           var usersReservations = this.reservations.filter(r => r.user.id == this.userId);
@@ -87,45 +103,25 @@ export class MapaComponent implements OnInit {
           console.error("Reservation failed:", error);
         }
       });
-    } else {
-      if(cell.isUsers && confirm("Cancel reservation?")) {
-            const reservation = this.reservations.find(r => r.user.id == this.userId);
-            if(reservation)
-            {
-              this.mapaService.deleteReservationsById(reservation.id).subscribe({
-                complete: () => {
-                  this.markReserved(reservation.date);
-                },
-                error: deleteError => {
-                  console.error("delete failed:", deleteError);
-                }
-            });
-            }
-  
+    } 
+    else if (cell.isUsers && confirm("Cancel reservation?")) {
+      const reservation = this.reservations.find(r => r.user.id == this.userId);
+      if (reservation) {
+        this.mapaService.deleteReservationsById(reservation.id).subscribe({
+          complete: () => {
+            this.markReserved(reservation.date);
+          },
+          error: deleteError => {
+            console.error("delete failed:", deleteError);
           }
-    }
-  }
-  ngOnInit(): void {
-    forkJoin({
-      rooms: this.mapaService.getRooms(),
-      //reservations: this.mapaService.getReservations()
-      //desks: this.mapaService.getDesks()
-    }).subscribe(
-      ({ rooms }) => {
-        this.rooms = rooms;
-        //this.reservations = reservations;
-        this.markDeskCells();
-
-        const today = new Date();
-        const date = today.toJSON().slice(0, 10);
-        this.markReserved(date);
-
-      },
-      (error: any) => {
-        console.error('Error fetching data:', error);
+        });
       }
-    );
-  }
+    }
+    else {
+      console.log('No action taken');
+    }
+}
+
 
   getCellsDesk(cell: Cell): Desk {
     for (const room of this.rooms) {
